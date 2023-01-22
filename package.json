@@ -1,5 +1,5 @@
 {
-  "name": "currency",
+  "name": "bankofrusssia",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -12,7 +12,6 @@
   "dependencies": {
     "axios": "^1.2.3",
     "iconv-lite": "^0.6.3",
-    "windows-1251": "^3.0.4",
     "xml2js": "^0.4.23"
   }
 }

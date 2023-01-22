@@ -1,24 +1,38 @@
 const axios = require('axios')
 const xml2js = require('xml2js')
-let iconv = require('iconv-lite');
+const iconv = require('iconv-lite')
+let url = 'https://www.cbr.ru/scripts/XML_daily.asp?date_req=22/01/2023'
 
-let url = 'https://www.cbr.ru/scripts/XML_daily.asp?date_req=20/01/2023'
 
-const start = async() => {
-    let data = await axios(url, {
+async function start(){
+    let data = await axios.get(url, {
         responseType: 'arraybuffer',
-        responseEncoding: 'binary'  
-    });
-    data = iconv.decode(Buffer.from(data.data), 'WINDOWS-1251')
-    
-    xml2js.parseString(data, (error, res) =>{
-        res.ValCurs.Valute.forEach(element => {
-            let str = `${element.Name} - ${element.Value}`
-            console.log(str)
-        });
-        //console.log(res.ValCurs.Valute)
+        responseEncoding: 'binary'
+    })
+    data = data.data
+    data = iconv.decode(Buffer.from(data), 'windows-1251')
 
+    xml2js.parseString(data, (error, result)=>{
+        let arrayCurrency = result.ValCurs.Valute
+        arrayCurrency.forEach(element => {
+            let str = `${element.Name} - ${element.CharCode}, значение ${element.Value}\n`
+            //console.log(str)
+        });
+        return result
     })
 }
 
-start()
+async function currencyExchange(charCode, value){
+    let arrayCurrency = await start()
+    console.log(arrayCurrency)
+    // arrayCurrency.forEach(element => {
+    //     if(element.CharCode == charCode){
+    //         let newValue = element.Value * value
+    //         console.log(newValue)
+    //         return
+    //     }
+    // });
+}
+
+//start()
+currencyExchange('USD', 10)
