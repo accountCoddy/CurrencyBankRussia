@@ -12,27 +12,21 @@ async function start(){
     data = data.data
     data = iconv.decode(Buffer.from(data), 'windows-1251')
 
-    xml2js.parseString(data, (error, result)=>{
-        let arrayCurrency = result.ValCurs.Valute
-        arrayCurrency.forEach(element => {
-            let str = `${element.Name} - ${element.CharCode}, значение ${element.Value}\n`
-            //console.log(str)
-        });
-        return result
-    })
+    let parseData = await xml2js.parseStringPromise(data)
+    return parseData.ValCurs.Valute
 }
+
 
 async function currencyExchange(charCode, value){
     let arrayCurrency = await start()
-    console.log(arrayCurrency)
-    // arrayCurrency.forEach(element => {
-    //     if(element.CharCode == charCode){
-    //         let newValue = element.Value * value
-    //         console.log(newValue)
-    //         return
-    //     }
-    // });
+
+    let findCurrency = arrayCurrency.find(element => element.CharCode == charCode)
+    if(!findCurrency){
+        console.log("Такой валюты нет!")
+        return
+    }
+    let newValue = parseFloat(findCurrency.Value)/parseFloat(findCurrency.Nominal) * value
+    console.log(`${value} ${findCurrency.CharCode} - ${newValue} RUB`)
 }
 
-//start()
-currencyExchange('USD', 10)
+currencyExchange('TRY', 1)
