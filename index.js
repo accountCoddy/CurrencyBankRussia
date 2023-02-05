@@ -9,7 +9,7 @@ async function start(){
     let currentDate = formatterDate(date)
     
     url += currentDate
-    console.log(url)
+    //console.log(url)
     let data = await axios.get(url, {
         responseType: 'arraybuffer',
         responseEncoding: 'binary'
@@ -29,7 +29,8 @@ async function currencyExchange(charCode, value){
     }
     let newValue = (parseFloat(findCurrency.Value)/ findCurrency.Nominal)* value
     let formatString = `${value} ${charCode} - ${newValue} RUB`
-    console.log(formatString)
+    return formatString
+    //console.log(formatString)
 }
 
 function formatterDate(date){
@@ -41,5 +42,7 @@ function formatterDate(date){
     return `${day}/${month}/${year}`
 }
 
-
-currencyExchange('UZS', 1)
+module.exports = {
+    currencyExchange
+}
+//currencyExchange('UZS', 1)
